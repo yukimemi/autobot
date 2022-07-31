@@ -1,7 +1,7 @@
 import * as colors from "https://deno.land/std@0.150.0/fmt/colors.ts";
 import * as log from "https://deno.land/std@0.150.0/log/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.150.0/fs/mod.ts";
-import { dirname } from "https://deno.land/std@0.141.0/path/mod.ts";
+import { dirname } from "https://deno.land/std@0.150.0/path/mod.ts";
 import { getLogger, LogRecord } from "https://deno.land/std@0.150.0/log/mod.ts";
 import { LevelName } from "https://deno.land/std@0.150.0/log/levels.ts";
 import { expand } from "/util.ts";
