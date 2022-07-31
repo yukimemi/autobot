@@ -1,0 +1,8 @@
+{
+  "importMap": "import_map.json",
+  "tasks": {
+    "start": "deno run -A src/main.ts",
+    "test": "deno test -A",
+    "install": "deno install -f -n autobot -A src/main.ts"
+  }
+}

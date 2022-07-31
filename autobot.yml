@@ -1,0 +1,45 @@
+---
+tasks:
+  main:
+    try:
+      - func: echo
+        args:
+          msg:
+            - "Hello autobot !"
+            - 'Hello ${colors.bgBlue("autobot !")}'
+            - '${sprintf("%9.8f", 456.0)}'
+      - func: echo
+        args:
+          msg:
+            - 'main: ${Deno.mainModule}'
+            - 'cwd: ${Deno.cwd()}'
+            - 'execPath: ${Deno.execPath()}'
+            - 'args: ${Deno.args}'
+      - func: cp
+        args:
+          src: src.txt
+          dst: dst.txt
+          options:
+            overwrite: true
+    catch:
+      - func: echo
+        args:
+          msg: "Catch ! error !"
+    finally:
+      - func: echo
+        args:
+          msg: "Finally ! execute !"
+  sub1:
+    try:
+      - func: cp
+        args:
+          src: src.txt
+          dst: dst.txt
+      - func: mv
+        args:
+          src: src.txt
+          dst: dst.txt
+
+log:
+  path: './logs/autobot_${format(new Date(), "yyyyMMdd_HHmmss")}.log'
+  level: "DEBUG"
