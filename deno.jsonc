@@ -3,6 +3,7 @@
   "tasks": {
     "start": "deno run -A src/main.ts",
     "test": "deno test -A",
-    "install": "deno install -f -n autobot -A src/main.ts"
+    "install": "deno install -f -n autobot -A src/main.ts",
+    "compile": "deno compile --unstable --import-map ./import_map.json -o autobot -A src/main.ts"
   }
 }
