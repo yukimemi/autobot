@@ -1,25 +1,15 @@
-import { log } from "/logger.ts";
 import * as colors from "https://deno.land/std@0.150.0/fmt/colors.ts";
-import { sprintf } from "https://deno.land/std@0.150.0/fmt/printf.ts";
-import { format } from "https://deno.land/std@0.150.0/datetime/mod.ts";
 import * as path from "https://deno.land/std@0.150.0/path/mod.ts";
+import { format } from "https://deno.land/std@0.150.0/datetime/mod.ts";
+import { sprintf } from "https://deno.land/std@0.150.0/fmt/printf.ts";
 import {
   isArray,
   isObject,
   isString,
 } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 
-export function existsSync(filePath: string): boolean {
-  try {
-    Deno.lstatSync(filePath);
-    return true;
-  } catch (err) {
-    if (err instanceof Deno.errors.NotFound) {
-      return false;
-    }
-    throw err;
-  }
-}
+import { log } from "./mod.ts";
+import { v } from "../vars.ts";
 
 export async function loop<T>(
   array: Array<T>,
@@ -38,10 +28,11 @@ export async function loop<T>(
 }
 
 export function expand(x: unknown | string): unknown {
+  const _v = v;
   const _format = format;
   const _colors = colors;
   const _sprintf = sprintf;
-  const _path = path;
+  const p = path;
   if (isObject(x)) {
     const o: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(x)) {
@@ -56,9 +47,9 @@ export function expand(x: unknown | string): unknown {
 
   if (isString(x)) {
     const before = "`" + x + "`";
-    log.debug(`[expand] before: ${before}`);
+    // log.debug(`[expand] before: ${before}`);
     const after = eval(before);
-    log.debug(`[expand] after: ${after}`);
+    // log.debug(`[expand] after: ${after}`);
     return after;
   }
 

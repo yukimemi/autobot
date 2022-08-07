@@ -1,7 +1,7 @@
 import {
-  copy,
   CopyOptions,
   ensureDir,
+  move,
 } from "https://deno.land/std@0.150.0/fs/mod.ts";
 import { dirname } from "https://deno.land/std@0.151.0/path/mod.ts";
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
@@ -16,13 +16,13 @@ type Args = {
   parallel?: boolean;
 };
 
-export const cp: Fn = async (args) => {
+export const mv: Fn = async (args) => {
   const a = args as Args;
-  await _cp(a);
+  await _mv(a);
   return Result.SUCCESS;
 };
 
-async function _cp(args: Args) {
+async function _mv(args: Args) {
   if (isArray<string>(args.src)) {
     await loop(args.src, async (s) => {
       const a: Args = {
@@ -30,7 +30,7 @@ async function _cp(args: Args) {
         dst: args.dst,
         options: args.options,
       };
-      await _cp(a);
+      await _mv(a);
     }, args.parallel);
     return;
   }
@@ -42,7 +42,7 @@ async function _cp(args: Args) {
         dst: d,
         options: args.options,
       };
-      await _cp(a);
+      await _mv(a);
     }, args.parallel);
     return;
   }
@@ -51,5 +51,5 @@ async function _cp(args: Args) {
   await ensureDir(dirname(args.dst));
 
   log.debug(`[${args.src}] -> [${args.dst}]`);
-  await copy(args.src, args.dst, args.options);
+  await move(args.src, args.dst, args.options);
 }

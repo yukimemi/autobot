@@ -1,33 +1,37 @@
-import { Fn, Result } from "/funcs/_base.ts";
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
-import { loop } from "/util.ts";
-import { log } from "/logger.ts";
 import * as colors from "https://deno.land/std@0.150.0/fmt/colors.ts";
-import { sprintf } from "https://deno.land/std@0.150.0/fmt/printf.ts";
 
-type Args = {
-  msg: string | string[];
+import { Fn, Result } from "./_base.ts";
+import { log, loop } from "../util/mod.ts";
+
+type Msg = {
+  msg: string;
+  color?: string;
 };
 
+type Args = Msg | Msg[];
+
 export const echo: Fn = async (args) => {
-  const _colors = colors;
-  const _sprintf = sprintf;
   const a = args as Args;
   await _echo(a);
   return Result.SUCCESS;
 };
 
 async function _echo(args: Args) {
-  if (isArray<string>(args.msg)) {
-    await loop(args.msg, async (m) => {
-      const a: Args = { msg: m };
-      await _echo(a);
+  if (isArray<Msg>(args)) {
+    await loop(args, async (msg: Msg) => {
+      await _echo(msg);
     });
     return;
   }
-  // const templ = "`" + args.msg + "`";
-  // log.debug(`[_echo] ${templ}`);
-  // const evalMsg = eval(templ);
-  // log.info(`[echo] ${evalMsg}`);
-  log.info(`[echo] ${args.msg}`);
+  if (args.color) {
+    const colorFunc = colors[args.color as keyof typeof colors] as (
+      str: string,
+    ) => string;
+    // console.log(`\n${colorFunc(args.msg)}`);
+    log.debug(`[echo] ${colorFunc(args.msg)}`);
+  } else {
+    // console.log(`\n${args.msg}`);
+    log.debug(`[echo] ${args.msg}`);
+  }
 }

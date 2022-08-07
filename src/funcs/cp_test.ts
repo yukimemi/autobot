@@ -1,7 +1,8 @@
 import { assertEquals } from "https://deno.land/std@0.150.0/testing/asserts.ts";
-import { Result } from "/funcs/_base.ts";
-import { cp } from "/funcs/cp.ts";
-import { existsSync } from "/util.ts";
+
+import { Result } from "./_base.ts";
+import { cp } from "./cp.ts";
+import { existsSync } from "../util/mod.ts";
 
 const src = "src.txt";
 const dst = "dst.txt";

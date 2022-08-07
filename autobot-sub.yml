@@ -1,0 +1,18 @@
+---
+tasks:
+  main:
+    try:
+      - func: echo
+        args:
+          - msg: "Hello autobot from sub !"
+            color: "red"
+    catch:
+      - func: echo
+        args:
+          msg: "Catch ! error ! (sub)"
+          color: "yellow"
+    finally:
+      - func: echo
+        args:
+          msg: "Finally ! execute ! (sub)"
+          color: "magenta"

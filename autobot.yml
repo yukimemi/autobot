@@ -2,43 +2,113 @@
 tasks:
   main:
     try:
+      - func: run
+        args:
+          id: sub1
+      - func: run
+        args:
+          id: main
+          path: autobot-sub.yml
+      - func: run
+        args:
+          - id: sub1
+          - id: sub2
+      - func: set
+        args:
+          name: "yukimemi"
+          names:
+            - "yukimemi taro"
+            - "yukimemi jiro"
+            - "yukimemi hanako"
+      - func: set
+        args:
+          msg: "Hello ${v.name} !"
+          brothers: "${v.names}"
+      - func: foreach
+        args:
+          get: "names"
+          set: "name"
+          task:
+            id: "echo_names"
       - func: echo
         args:
-          msg:
-            - "Hello autobot !"
-            - 'Hello ${colors.bgBlue("autobot !")}'
-            - '${sprintf("%9.8f", 456.0)}'
+          - msg: "Hello autobot !"
+            color: "green"
+          - msg: 'Hello ${colors.bgBlue("autobot !")}'
+            color: "cyan"
+          - msg: '${sprintf("%9.8f", 456.0)}'
+            color: "red"
       - func: echo
         args:
-          msg:
-            - 'main: ${Deno.mainModule}'
-            - 'cwd: ${Deno.cwd()}'
-            - 'execPath: ${Deno.execPath()}'
-            - 'args: ${Deno.args}'
+          - msg: 'main: ${Deno.mainModule}'
+          - msg: 'cwd: ${Deno.cwd()}'
+          - msg: 'execPath: ${Deno.execPath()}'
+          - msg: 'args: ${Deno.args}'
+      - func: touch
+        args:
+          path:
+            - "test/src.txt"
+            - "test/src1.txt"
+            - "test/src2.txt"
       - func: cp
         args:
-          src: src.txt
-          dst: dst.txt
+          src: "test/src.txt"
+          dst:
+            - "test/dst1.txt"
+            - "test/dst2.txt"
+          options:
+            overwrite: true
+      - func: cp
+        args:
+          src:
+            - "test/src1.txt"
+            - "test/src2.txt"
+          dst:
+            - "test/src1/dst1.txt"
+            - "test/src1/dst2.txt"
+            - "test/src2/dst1.txt"
+            - "test/src2/dst2.txt"
           options:
             overwrite: true
     catch:
       - func: echo
         args:
           msg: "Catch ! error !"
+          color: "yellow"
     finally:
       - func: echo
         args:
           msg: "Finally ! execute !"
+          color: "magenta"
   sub1:
     try:
+      - func: rm
+        args:
+          - path: "test/src.txt"
+          - path: "test/dst.txt"
+      - func: touch
+        args:
+          path: "test/src.txt"
       - func: cp
         args:
-          src: src.txt
-          dst: dst.txt
+          src: "test/src.txt"
+          dst: "test/dst.txt"
       - func: mv
         args:
-          src: src.txt
-          dst: dst.txt
+          src: "test/src.txt"
+          dst: "test/dst.txt"
+          options:
+            overwrite: true
+  sub2:
+    try:
+      - func: echo
+        args:
+          msg: "sub 2 run !"
+  echo_names:
+    try:
+      - func: echo
+        args:
+          msg: "Hello ${v.name}"
 
 log:
   path: './logs/autobot_${format(new Date(), "yyyyMMdd_HHmmss")}.log'
