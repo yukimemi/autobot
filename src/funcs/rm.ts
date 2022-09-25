@@ -1,20 +1,20 @@
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 
 import { Fn, Result } from "./_base.ts";
-import { log, loop, existsSync } from "../util/mod.ts";
+import { existsSync, log, loop } from "../util/mod.ts";
 
 type _Args = {
   path: string;
   options?: {
     recurse: boolean;
-  }
+  };
 };
 
 type Args = (_Args | _Args[]) & {
   parallel?: boolean;
 };
 
-export const rm: Fn = async (args) => {
+export const rm: Fn = async (_sb: symbol, args) => {
   const a = args as Args;
   await _rm(a);
   return Result.SUCCESS;

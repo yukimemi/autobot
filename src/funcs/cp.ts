@@ -2,8 +2,8 @@ import {
   copy,
   CopyOptions,
   ensureDir,
-} from "https://deno.land/std@0.150.0/fs/mod.ts";
-import { dirname } from "https://deno.land/std@0.151.0/path/mod.ts";
+} from "https://deno.land/std@0.157.0/fs/mod.ts";
+import { dirname } from "https://deno.land/std@0.157.0/path/mod.ts";
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 
 import { Fn, Result } from "./_base.ts";
@@ -16,7 +16,7 @@ type Args = {
   parallel?: boolean;
 };
 
-export const cp: Fn = async (args) => {
+export const cp: Fn = async (_sb: symbol, args) => {
   const a = args as Args;
   await _cp(a);
   return Result.SUCCESS;
@@ -50,6 +50,6 @@ async function _cp(args: Args) {
   log.debug(`Create [${args.dst}]'s dir`);
   await ensureDir(dirname(args.dst));
 
-  log.debug(`[${args.src}] -> [${args.dst}]`);
+  log.info(`[${args.src}] -> [${args.dst}]`);
   await copy(args.src, args.dst, args.options);
 }

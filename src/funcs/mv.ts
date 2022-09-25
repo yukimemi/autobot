@@ -2,8 +2,8 @@ import {
   CopyOptions,
   ensureDir,
   move,
-} from "https://deno.land/std@0.150.0/fs/mod.ts";
-import { dirname } from "https://deno.land/std@0.151.0/path/mod.ts";
+} from "https://deno.land/std@0.157.0/fs/mod.ts";
+import { dirname } from "https://deno.land/std@0.157.0/path/mod.ts";
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
 
 import { Fn, Result } from "./_base.ts";
@@ -16,7 +16,7 @@ type Args = {
   parallel?: boolean;
 };
 
-export const mv: Fn = async (args) => {
+export const mv: Fn = async (_sb: symbol, args) => {
   const a = args as Args;
   await _mv(a);
   return Result.SUCCESS;

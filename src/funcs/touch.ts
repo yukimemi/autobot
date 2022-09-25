@@ -1,5 +1,5 @@
 import { isArray } from "https://deno.land/x/unknownutil@v2.0.0/mod.ts";
-import { ensureFile } from "https://deno.land/std@0.151.0/fs/mod.ts";
+import { ensureFile } from "https://deno.land/std@0.157.0/fs/mod.ts";
 
 import { Fn, Result } from "./_base.ts";
 import { log, loop } from "../util/mod.ts";
@@ -9,7 +9,7 @@ type Args = {
   parallel?: boolean;
 };
 
-export const touch: Fn = async (args) => {
+export const touch: Fn = async (_sb: symbol, args) => {
   const a = args as Args;
   await _touch(a);
   return Result.SUCCESS;

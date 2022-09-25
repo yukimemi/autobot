@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.150.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.157.0/testing/asserts.ts";
 
 import { Result } from "./_base.ts";
 import { cp } from "./cp.ts";
@@ -13,7 +13,7 @@ Deno.test({
   name: "Normal cp test",
   async fn(): Promise<void> {
     await init();
-    const result = await cp({
+    const result = await cp(Symbol(), {
       src,
       dst,
       options: { overwrite: true },
@@ -34,7 +34,7 @@ Deno.test({
   name: "1 src -> 2 dst",
   async fn(): Promise<void> {
     await init();
-    const result = await cp({
+    const result = await cp(Symbol(), {
       src,
       dst: [dst1, dst2],
       options: { overwrite: true },

@@ -4,5 +4,6 @@ export enum Result {
 }
 
 export type Fn = (
+  sb: symbol,
   args: Record<string, unknown> | Record<string, unknown>[],
 ) => Promise<number>;

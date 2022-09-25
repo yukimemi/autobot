@@ -1,9 +1,8 @@
-import * as yaml from "https://deno.land/std@0.150.0/encoding/yaml.ts";
-import { resolve } from "https://deno.land/std@0.150.0/path/mod.ts";
+import * as yaml from "https://deno.land/std@0.157.0/encoding/yaml.ts";
+import { resolve } from "https://deno.land/std@0.157.0/path/mod.ts";
 
 import type { Tasks } from "../config/mod.ts";
-import { existsSync, log, pathParseEx } from "../util/mod.ts";
-import { v } from "../vars.ts";
+import { existsSync, log } from "../util/mod.ts";
 
 export type Config = {
   tasks: Tasks;
@@ -12,7 +11,7 @@ export type Config = {
   path: string;
 };
 
-export let cfgs: Config[] = [];
+export const cfgs = new Map<string, Config>();
 
 export async function parseConfig(
   configPath: string,
@@ -24,12 +23,16 @@ export async function parseConfig(
   const cfg = yaml.parse(await Deno.readTextFile(configPath)) as Config;
   cfg.path = configPath;
   cfg.init = false;
-  cfgs.push(cfg);
+  cfgs.set(cfg.path, cfg);
   return cfg;
 }
 
 export function isLoaded(path: string): boolean {
-  return cfgs.some((c) => resolve(c.path) === resolve(path));
+  const p = cfgs.get(path)?.path ?? "";
+  if (resolve(p) === resolve(path)) {
+    return true;
+  }
+  return false;
 }
 
 export async function addConfig(path: string): Promise<void> {
@@ -40,27 +43,15 @@ export async function addConfig(path: string): Promise<void> {
   await parseConfig(path);
 }
 
-export function findConfig(path: string): Config | undefined {
-  return cfgs.find((c) => resolve(c.path) === resolve(path));
-}
-
 export async function getConfig(path: string): Promise<Config> {
   await addConfig(path);
-  return (findConfig(path) as Config);
+  const c = cfgs.get(path);
+  if (c == undefined) {
+    throw `[getConfig] ${path} is not loaded`;
+  }
+  return c;
 }
 
 export function updateCfgs(config: Config) {
-  cfgs = cfgs.map((c) => {
-    if (c.path === config.path) {
-      return config;
-    }
-    return c;
-  });
-}
-
-export function setConfig(config: Config): void {
-  v.c = {
-    init: config.init,
-    p: pathParseEx(config.path),
-  };
+  cfgs.set(config.path, config);
 }

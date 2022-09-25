@@ -4,15 +4,18 @@ tasks:
     try:
       - func: run
         args:
-          id: sub1
+          task:
+            id: sub1
       - func: run
         args:
-          id: main
-          path: autobot-sub.yml
+          task:
+            id: main
+            path: autobot-sub.yml
       - func: run
         args:
-          - id: sub1
-          - id: sub2
+          task:
+            - id: sub1
+            - id: sub2
       - func: set
         args:
           name: "yukimemi"
@@ -26,10 +29,11 @@ tasks:
           brothers: "${v.names}"
       - func: foreach
         args:
-          get: "names"
-          set: "name"
+          get: names
+          set: name
           task:
-            id: "echo_names"
+            id: echo_names
+          parallel: true
       - func: echo
         args:
           - msg: "Hello autobot !"
@@ -44,6 +48,14 @@ tasks:
           - msg: 'cwd: ${Deno.cwd()}'
           - msg: 'execPath: ${Deno.execPath()}'
           - msg: 'args: ${Deno.args}'
+      - func: run
+        args:
+          task:
+            - id: sub1
+            - id: sub2
+            - id: sub3
+            - id: sub4
+          parallel: true
       - func: touch
         args:
           path:
@@ -70,6 +82,7 @@ tasks:
             - "test/src2/dst2.txt"
           options:
             overwrite: true
+          parallel: true
     catch:
       - func: echo
         args:
@@ -104,6 +117,16 @@ tasks:
       - func: echo
         args:
           msg: "sub 2 run !"
+  sub3:
+    try:
+      - func: echo
+        args:
+          msg: "sub 3 run !"
+  sub4:
+    try:
+      - func: echo
+        args:
+          msg: "sub 4 run !"
   echo_names:
     try:
       - func: echo
